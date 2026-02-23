@@ -8,9 +8,9 @@ async function main(){
         // top_p: 0.2,
         stop: 'gative',
         max_completion_tokens: 1000,
-        model: 'llama-3.3-70b-versatile',
         frequency_penalty: 2,
         presence_penalty: 2,
+        model: 'llama-3.3-70b-versatile',
         messages: [
             {
                 role: 'system',
