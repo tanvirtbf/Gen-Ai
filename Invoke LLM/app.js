@@ -1,3 +1,40 @@
+import Groq from "groq-sdk";
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+
+async function main () {
+  const completions = await groq.chat.completions.create({
+    temperature: 0.4, 
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      {
+        role: 'system',
+        messages: 'You Are Tanvir. A Software Engineer and You are a practicing Muslim'
+      },
+      {
+        role: 'user',
+        messages: 'Who Are YOU ? '
+      }
+    ]
+  })
+
+  console.log(completions)
+}
+
+main()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
