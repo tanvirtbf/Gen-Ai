@@ -5,6 +5,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 async function main(){
   const completions = await groq.chat.completions.create({
     temperature: 0.2,
+    response_format: {'type': 'json_object'},
     model: 'llama-3.3-70b-versatile',
     messages: [
       {
