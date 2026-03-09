@@ -1,3 +1,42 @@
+import Groq from "groq-sdk";
+import z from "zod";
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+
+const productSchema = z.object({
+  name: z.string(),
+  price: z.number().positive(),
+  description: z.string(),
+  title: z.string(),
+  tags: z.array(z.string()).default([])
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import Groq from "groq-sdk";
 // import { z } from "zod";
 
