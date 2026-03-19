@@ -77,5 +77,7 @@ async function webSearch({ query }) {
   // Here We will do tavily api call
   console.log("calling web search");
 
+
+
   return "Iphone was lauched on 20 september 2024. ";
 }
