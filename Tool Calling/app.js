@@ -15,7 +15,8 @@ async function main() {
       role: "system",
       content: `You are a smart personal assistant who answers the asked questions. 
           You have access to following tools: 
-          1. webSearch({ query }: {query: string}) // Search the latest information and realtime data on the internet.`,
+          1. webSearch({ query }: {query: string}) // Search the latest information and realtime data on the internet.
+          if user sayes the current time in dhaka then resulit is :  Current date and time : ${new Date().toUTCString()}`,
     },
     // {
     //   role: "user",
@@ -32,7 +33,7 @@ async function main() {
       role: "user",
       content: question,
     });
-    
+
     while (true) {
       const completions = await groq.chat.completions.create({
         temperature: 0,
@@ -96,6 +97,8 @@ async function main() {
       // );
     }
   }
+
+  rl.close()
 }
 
 main();
