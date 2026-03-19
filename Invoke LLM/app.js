@@ -4,20 +4,19 @@ import { tavily } from "@tavily/core";
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const tvly = new tavily({ apiKey: process.env.TAVILY_API_KEY });
 
-const messages = [
-  {
-    role: "system",
-    content: `You are a smart personal assistant who answers the asked questions. 
+async function main() {
+  const messages = [
+    {
+      role: "system",
+      content: `You are a smart personal assistant who answers the asked questions. 
         You have access to following tools: 
         1. webSearch({ query }: {query: string}) // Search the latest information and realtime data on the internet.`,
-  },
-  {
-    role: "user",
-    content: "When was Iphone 17 Launched?  ",
-  },
-];
-
-async function main() {
+    },
+    {
+      role: "user",
+      content: "When was Iphone 17 Launched?  ",
+    },
+  ];
   const completions = await groq.chat.completions.create({
     temperature: 0,
     model: "llama-3.3-70b-versatile",
