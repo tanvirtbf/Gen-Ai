@@ -1,7 +1,8 @@
 import Groq from "groq-sdk";
-import 
+
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
 
 async function main() {
   const completions = await groq.chat.completions.create({
@@ -25,25 +26,29 @@ async function main() {
         type: "function",
         function: {
           name: "webSearch",
-          description: "Search the latest information and realtime data on the internet.",
+          description:
+            "Search the latest information and realtime data on the internet.",
           parameters: {
             // JSON Schema object
             type: "object",
             properties: {
               query: {
-                type: 'string',
-                description: 'The search query to perform search on.'
-              }
+                type: "string",
+                description: "The search query to perform search on.",
+              },
             },
             required: ["query"],
           },
         },
       },
     ],
-    tool_choice: 'auto'
+    tool_choice: "auto",
   });
 
-  console.log("result: ", JSON.stringify(completions.choices[0].message, null , 2 ));
+  console.log(
+    "result: ",
+    JSON.stringify(completions.choices[0].message, null, 2),
+  );
 }
 
 main();
