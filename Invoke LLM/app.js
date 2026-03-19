@@ -87,8 +87,9 @@ main();
 
 async function webSearch({ query }) {
   // Here We will do tavily api call
+  console.log('webSearch...')
 
-  console.log("query : ", query);
+  // console.log("query : ", query);
 
   const response = await tvly.search(query);
   const finalResult = response.results.map((item) => item.content).join("/n/n");
