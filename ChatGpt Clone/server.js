@@ -13,7 +13,6 @@ app.get("/", (req, res) => {
 app.post("/chat", async (req, res) => {
   const { message } = req.body;
 
-  console.log("message: ", message);
   const assistantMessage = await generate(message);
 
   res.json({ message: assistantMessage });
