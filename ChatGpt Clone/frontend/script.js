@@ -5,6 +5,10 @@ const askBtn = document.querySelector("#ask");
 input.addEventListener("keyup", handleEnter);
 askBtn.addEventListener("click", handleAsk);
 
+const loading = document.createElement("div");
+loading.className = "my-6";
+loading.textContent = "Thinking...";
+
 async function callServer(inputText) {
   const response = await fetch("http://localhost:3001/chat", {
     method: "POST",
@@ -37,11 +41,14 @@ async function generate(text) {
   chatContainer?.appendChild(msg);
   input.value = "";
 
+  chatContainer?.appendChild(loading);
+
   const result = await callServer(text);
-  const ans = document.createElement("div")
+  const ans = document.createElement("div");
   ans.className = `my-6 bg-neutral-800 p-3 rounded-xl mr-auto max-w-fit`;
   ans.textContent = result;
-  chatContainer?.appendChild(ans)
+  loading.remove();
+  chatContainer?.appendChild(ans);
 }
 
 async function handleAsk(e) {
