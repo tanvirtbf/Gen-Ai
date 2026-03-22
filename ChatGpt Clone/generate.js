@@ -21,7 +21,7 @@ export async function generate(userMessage) {
   while (true) {
     const completions = await groq.chat.completions.create({
       temperature: 0.7,
-      model: "llama-3.3-70b-versatile",
+      model: "meta-llama/llama-4-scout-17b-16e-instruct",
       messages: message,
       tools: [
         {

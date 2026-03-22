@@ -6,7 +6,7 @@ input.addEventListener("keyup", handleEnter);
 askBtn.addEventListener("click", handleAsk);
 
 const loading = document.createElement("div");
-loading.className = "my-6";
+loading.className = "my-6 animate-spin";
 loading.textContent = "Thinking...";
 
 async function callServer(inputText) {
