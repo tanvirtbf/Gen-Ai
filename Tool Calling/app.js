@@ -18,10 +18,6 @@ async function main() {
           1. webSearch({ query }: {query: string}) // Search the latest information and realtime data on the internet.
           if user sayes the current time in dhaka then resulit is :  Current date and time : ${new Date().toUTCString()}`,
     },
-    // {
-    //   role: "user",
-    //   content: "When was Iphone 17 Launched?  ",
-    // },
   ];
 
   while (true) {
@@ -74,13 +70,13 @@ async function main() {
       }
 
       for (const tool of toolCalls) {
-        // console.log("tool", tool);
+        console.log("tool", tool);
         const functionName = tool.function.name;
         const functionParams = tool.function.arguments;
 
         if (functionName === "webSearch") {
           const toolResult = await webSearch(JSON.parse(functionParams));
-          // console.log("tool Result : ", toolResult);
+          console.log("tool Result : ", toolResult);
 
           messages.push({
             tool_call_id: tool.id,
