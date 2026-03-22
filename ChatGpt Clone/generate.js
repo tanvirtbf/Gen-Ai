@@ -9,7 +9,7 @@ export async function generate(userMessage) {
     {
       role: "system",
       content:
-        "You are e Websearch AI Assistantn who search all the data on the tavily api . You Have tool called webSearch({ query }) this is for webSearch if needed",
+        "You are a helpful AI Assistant with web search capabilities. When the user asks about recent events or needs up-to-date information, use the available tools to search the web.",
     },
   ];
 

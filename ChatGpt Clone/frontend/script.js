@@ -5,7 +5,26 @@ const askBtn = document.querySelector("#ask");
 input.addEventListener("keyup", handleEnter);
 askBtn.addEventListener("click", handleAsk);
 
-function generate(text) {
+async function callServer(inputText) {
+  const response = await fetch("http://localhost:3001/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message: inputText,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error generating the response!");
+  }
+
+  const data = await response.json();
+  return data.message;
+}
+
+async function generate(text) {
   /**
    * 1. append message to ui
    * 2. send it to the LLM
@@ -17,19 +36,25 @@ function generate(text) {
   msg.textContent = text;
   chatContainer?.appendChild(msg);
   input.value = "";
+
+  const result = await callServer(text);
+  const ans = document.createElement("div")
+  ans.className = `my-6 bg-neutral-800 p-3 rounded-xl mr-auto max-w-fit`;
+  ans.textContent = result;
+  chatContainer?.appendChild(ans)
 }
 
-function handleAsk(e) {
+async function handleAsk(e) {
   console.log(e);
   const text = input?.value.trim();
   if (!text) {
     return;
   }
 
-  generate(text);
+  await generate(text);
 }
 
-function handleEnter(e) {
+async function handleEnter(e) {
   console.log(e);
   if (e.key === "Enter") {
     const text = input?.value.trim();
@@ -37,6 +62,6 @@ function handleEnter(e) {
       return;
     }
 
-    generate(text);
+    await generate(text);
   }
 }
