@@ -1,9 +1,9 @@
 const input = document.querySelector("#input");
 const chatContainer = document.querySelector("#chat-container");
-
-console.log("input", input);
+const askBtn = document.querySelector("#ask");
 
 input.addEventListener("keyup", handleEnter);
+askBtn.addEventListener("click", handleAsk);
 
 function generate(text) {
   /**
@@ -17,10 +17,20 @@ function generate(text) {
   msg.textContent = text;
   chatContainer?.appendChild(msg);
   input.value = "";
+}
 
+function handleAsk(e) {
+  console.log(e);
+  const text = input?.value.trim();
+  if (!text) {
+    return;
+  }
+
+  generate(text);
 }
 
 function handleEnter(e) {
+  console.log(e);
   if (e.key === "Enter") {
     const text = input?.value.trim();
     if (!text) {
@@ -28,6 +38,5 @@ function handleEnter(e) {
     }
 
     generate(text);
-    console.log(text);
   }
 }
