@@ -1,8 +1,10 @@
 import Groq from "groq-sdk";
 import { tavily } from "@tavily/core";
+import NodeCache from "node-cache";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const tvly = new tavily({ apiKey: process.env.TAVILY_API_KEY });
+const myCache = new NodeCache({ stdTTL: 60 * 60 * 24 });
 
 export async function generate(userMessage) {
   const message = [
@@ -47,7 +49,7 @@ export async function generate(userMessage) {
 
     message.push(completions.choices[0].message);
 
-    console.log(completions.choices[0].message)
+    console.log(completions.choices[0].message);
 
     const toolCall = completions.choices[0].message.tool_calls;
 
