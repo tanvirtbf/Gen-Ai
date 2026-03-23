@@ -36,7 +36,7 @@ export async function generate(userMessage, threadId) {
     },
   ];
 
-  const message = cache.get(threadId) ?? baseMessage;
+  const message = cache.get(threadId) ?? baseMessage; // threadId te value thakle setaii nau noyto baseMessage er value neu
 
   message.push({
     role: "user",
@@ -72,7 +72,7 @@ export async function generate(userMessage, threadId) {
 
     message.push(completions.choices[0].message);
 
-    console.log(completions.choices[0].message);
+    // console.log(completions.choices[0].message);
 
     const toolCall = completions.choices[0].message.tool_calls;
 
@@ -84,14 +84,14 @@ export async function generate(userMessage, threadId) {
     }
 
     for (const tool of toolCall) {
-      console.log("tool", tool);
+      // console.log("tool", tool);
       const functionName = tool.function.name;
       const functionArguments = tool.function.arguments;
 
       if (functionName === "webSearch") {
         const toolResult = await webSearch(JSON.parse(functionArguments));
 
-        console.log("tool result : ", toolResult);
+        // console.log("tool result : ", toolResult);
 
         message.push({
           tool_call_id: tool.id,
