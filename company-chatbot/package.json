@@ -6,5 +6,10 @@
   "scripts": {
     "start": "bun run index.js",
     "dev": "bun --watch index.js"
+  },
+  "dependencies": {
+    "@langchain/community": "^1.1.24",
+    "@langchain/core": "^1.1.35",
+    "pdf-parse": "^1.1.4"
   }
 }
