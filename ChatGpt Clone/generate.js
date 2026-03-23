@@ -4,9 +4,13 @@ import NodeCache from "node-cache";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const tvly = new tavily({ apiKey: process.env.TAVILY_API_KEY });
-const myCache = new NodeCache({ stdTTL: 60 * 60 * 24 });
+const cache = new NodeCache({ stdTTL: 60 * 60 * 24 });
 
-export async function generate(userMessage) {
+{
+  userId: [messages]
+}
+
+export async function generate(userMessage, threadId) {
   const message = [
     {
       role: "system",
