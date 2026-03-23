@@ -5,4 +5,5 @@ export async function indexTheDocument(filePath) {
 
   const doc = await loader.load();
   console.log("doc", doc[0].pageContent);
+  
 }
