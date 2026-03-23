@@ -5,9 +5,25 @@ const chatContainer = document.getElementById("chat-container");
 input.addEventListener("keyup", handleInput);
 ask.addEventListener("click", handleAsk);
 
+async function callServer(text) {
+    
+}
+
 async function generate(text) {
-    input.remove();
-    console.log('text: ', text)
+    input.value = "";
+
+    const questionElement = document.createElement("div")
+    const answerElement = document.createElement("div")
+
+    questionElement.className = "my-6 px-4 py-1 bg-neutral-800 rounded text-white ml-auto w-fit"
+    answerElement.className = "my-6 px-4 py-1 bg-neutral-800 rounded text-white mr-auto w-fit"
+
+    questionElement.textContent = text;
+    chatContainer.appendChild(questionElement)
+
+
+
+
 }
 
 async function handleInput(e) {
