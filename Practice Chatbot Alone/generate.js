@@ -10,7 +10,8 @@ export async function generate(userMessage) {
       content: `You are a smart personal assistant who answers the asked questions. 
           You have access to following tools: 
           1. webSearch({ query }: {query: string}) // Search the latest information and realtime data on the internet.
-          if user sayes the current time then resulit is :  Current date and time : ${new Date().toUTCString()}`,
+          if user sayes the current time then resulit is :  Current date and time : ${new Date().toUTCString()} 
+          However Answer should be short`,
     },
   ];
 
@@ -21,7 +22,7 @@ export async function generate(userMessage) {
 
   while (true) {
     const completions = await groq.chat.completions.create({
-      temperature: 0.7,
+      temperature: 0.1,
       model: "llama-3.3-70b-versatile",
       messages: messages,
       tools: [
