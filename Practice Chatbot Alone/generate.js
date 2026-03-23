@@ -73,7 +73,7 @@ async function webSearch({ query }) {
   // Here We will do tavily api call
   console.log("calling web search");
 
-  const response = await tvly.search(query, { max_results: 5 });
+  const response = await tvly.search(query, { max_results: 1 });
   // console.log("response : ", response);
 
   const finalResult = response.results.map((item) => item.content).join("/n/n");
