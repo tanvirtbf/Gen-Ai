@@ -6,12 +6,8 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const tvly = new tavily({ apiKey: process.env.TAVILY_API_KEY });
 const cache = new NodeCache({ stdTTL: 60 * 60 * 24 });
 
-{
-  userId: [messages]
-}
-
 export async function generate(userMessage, threadId) {
-  const message = [
+  const baseMessage = [
     {
       role: "system",
       content: `You are a smart personal assistant.
@@ -39,6 +35,8 @@ export async function generate(userMessage, threadId) {
       `,
     },
   ];
+
+  const message = cache.get(threadId) ?? baseMessage;
 
   message.push({
     role: "user",
@@ -79,6 +77,9 @@ export async function generate(userMessage, threadId) {
     const toolCall = completions.choices[0].message.tool_calls;
 
     if (!toolCall || toolCall.length === 0) {
+      // here we end the chatbot response
+      cache.set(threadId, message, 60 * 60 * 24);
+      console.log("cache: ", cache);
       return completions.choices[0].message.content;
     }
 
