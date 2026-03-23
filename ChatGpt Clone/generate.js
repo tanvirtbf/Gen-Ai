@@ -79,7 +79,7 @@ export async function generate(userMessage, threadId) {
     if (!toolCall || toolCall.length === 0) {
       // here we end the chatbot response
       cache.set(threadId, message, 60 * 60 * 24);
-      console.log("cache: ", cache);
+      console.log("cache: ", JSON.stringify(cache.data));
       return completions.choices[0].message.content;
     }
 
