@@ -15,5 +15,6 @@
 
 import { indexTheDocument } from "./prepare.js";
 
+
 const filePath = "./cg-internal-docs.pdf"
 await indexTheDocument(filePath)
