@@ -10,6 +10,7 @@
         "@langchain/openai": "^1.3.0",
         "@langchain/pinecone": "^1.0.1",
         "@pinecone-database/pinecone": "4",
+        "groq-sdk": "^1.1.1",
         "pdf-parse": "^1.1.4",
       },
     },
@@ -164,6 +165,8 @@
     "get-proto": ["get-proto@1.0.1", "", { "dependencies": { "dunder-proto": "^1.0.1", "es-object-atoms": "^1.0.0" } }, "sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g=="],
 
     "gopd": ["gopd@1.2.0", "", {}, "sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg=="],
+
+    "groq-sdk": ["groq-sdk@1.1.1", "", { "bin": { "groq-sdk": "bin/cli" } }, "sha512-p0fb/sfrYfUDJf+b4s+ptV6XrQnY0gA0u2pbaH4E1l6yaeLCKtdX5OBhP/wXXBuKrSnU9w45RaFebfJDWxsXMw=="],
 
     "handlebars": ["handlebars@4.7.8", "", { "dependencies": { "minimist": "^1.2.5", "neo-async": "^2.6.2", "source-map": "^0.6.1", "wordwrap": "^1.0.0" }, "optionalDependencies": { "uglify-js": "^3.1.4" }, "bin": { "handlebars": "bin/handlebars" } }, "sha512-vafaFqs8MZkRrSX7sFVUdo3ap/eNiLnb4IakshzvP56X5Nr1iGKAIqdX6tMlm6HcNRIkr6AxO5jFEoJzzpT8aQ=="],
 
