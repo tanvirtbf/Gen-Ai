@@ -17,7 +17,7 @@ const pinecone = new PineconeClient(); // ekhane api key deya jay . jemon new Pi
 const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX_NAME);
 export const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
   pineconeIndex,
-  maxConcurrency: 5,
+  maxConcurrency: 5, // max eksathe 5 ta thread parallel vabe pinecode e data pathabe or kaj korbe
 });
 export async function indexTheDocument(filePath) {
   const loader = new PDFLoader(filePath, { splitPages: false });
