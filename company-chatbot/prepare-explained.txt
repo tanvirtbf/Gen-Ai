@@ -1,0 +1,264 @@
+============================================================
+        prepare.js — Line by Line Bangla Explanation
+============================================================
+
+
+------------------------------------------------------------
+LINE 1-6: Import Statements (Library gulo load kora)
+------------------------------------------------------------
+
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+→ PDF file read korar jonno PDFLoader aana hocche. Eta PDF theke text extract kore.
+
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+→ Boro text ke choto choto chunk e vag korar tool. "Recursive" mane eta intelligently
+  paragraph, sentence, word boundary dhore split kore — randomly kata-kata kore na.
+
+import { Document } from "@langchain/core/documents";
+→ LangChain er Document class — protita chunk ke proper Document format e convert
+  korar jonno laage. Document er 2 ta part: pageContent (text) + metadata (extra info).
+
+import { OpenAIEmbeddings } from "@langchain/openai";
+→ OpenAI er embedding model — text ke number er array te (vector) convert kore.
+  Jemon: "ami valo achi" → [0.23, -0.45, 0.12, ...] (1536 ta number)
+
+import { PineconeStore } from "@langchain/pinecone";
+→ LangChain + Pinecone er moddhe bridge. Eta vector store/retrieve er kaj easy kore
+  dey — embedding generate + Pinecone e store — duita ekbar e kore fele.
+
+import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
+→ Pinecone vector database er official SDK. Database er sathe connect korar jonno.
+
+
+------------------------------------------------------------
+LINE 10-13: OpenAI Embedding Model Setup
+------------------------------------------------------------
+
+const embeddings = new OpenAIEmbeddings({
+  model: "text-embedding-3-small",
+});
+
+→ Embedding model initialize kora hocche.
+→ "text-embedding-3-small" — OpenAI er lightweight embedding model.
+  Eta text niye sei text er meaning ke ekta vector (number er list) e convert kore.
+→ API key automatically .env file theke ney jodi OPENAI_API_KEY name e thake.
+→ Keno laage: Vector database e text directly store hoy na — number e convert kore
+  store hoy, jate poortartar meaning-based search kora jay (semantic search).
+
+
+------------------------------------------------------------
+LINE 15: Pinecone Client Setup
+------------------------------------------------------------
+
+const pinecone = new PineconeClient();
+
+→ Pinecone database er sathe connection toiri kora hocche.
+→ API key automatically .env file theke ney jodi PINECONE_API_KEY name e thake.
+
+
+------------------------------------------------------------
+LINE 17: Pinecone Index Select Kora
+------------------------------------------------------------
+
+const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX_NAME);
+
+→ Pinecone e "Index" mane ekta database table er moto.
+→ .env file e PINECONE_INDEX_NAME e ja nam deya ache, sei index e connect hocche.
+→ Example: jodi PINECONE_INDEX_NAME="company-docs" tahole "company-docs" index e
+  data store hobe.
+
+
+------------------------------------------------------------
+LINE 18-21: Vector Store Initialize Kora
+------------------------------------------------------------
+
+export const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
+  pineconeIndex,
+  maxConcurrency: 5,
+});
+
+→ LangChain er PineconeStore create kora hocche — eta Pinecone + OpenAI Embeddings
+  ke ek sathe jore dey.
+→ fromExistingIndex — already Pinecone e ja index ache seta use korbe (notun
+  banabe na).
+→ maxConcurrency: 5 — ek sathe maximum 5 ta request parallel e Pinecone e pathabe.
+  Eta performance baray — 1 ta 1 ta na kore, 5 ta ek sathe kore.
+→ export kora hocche karon onno file (jemon index.js) theke vectorStore use korbe
+  data retrieve korar somoy.
+
+
+------------------------------------------------------------
+LINE 22: Function Declaration
+------------------------------------------------------------
+
+export async function indexTheDocument(filePath) {
+
+→ "indexTheDocument" — ekta async function ja PDF file niye sei file er content ke
+  vector database e store kore.
+→ filePath parameter e PDF file er path deya hoy (jemon "./company-docs.pdf").
+→ export kora ache tai index.js theke call kora jay.
+→ async karon PDF load, text split, embedding generate — sob e time laage (await
+  laagbe).
+
+
+------------------------------------------------------------
+LINE 23: PDF Load Kora
+------------------------------------------------------------
+
+const loader = new PDFLoader(filePath, { splitPages: false });
+
+→ PDFLoader toiri kora hocche dewa file path diye.
+→ splitPages: false — mane purota PDF er text ek jaygay anbe, page wise alag
+  alag korbe na.
+  - true dile: page 1 er text alag, page 2 er text alag — array te alag alag item
+  - false dile: sob page er text milie ekta text hisebe dey
+
+
+------------------------------------------------------------
+LINE 25: PDF theke Text Extract Kora
+------------------------------------------------------------
+
+const doc = await loader.load();
+
+→ PDF file actually read kore text extract kore.
+→ doc ekta array return kore. Protita item e thake:
+  - pageContent: PDF er text content (string)
+  - metadata: Extra info — file name, page count, etc.
+→ Joto splitPages: false dewa ache, doc[0] e purota PDF er content thakbe.
+
+
+------------------------------------------------------------
+LINE 28-31: Text Splitter Setup
+------------------------------------------------------------
+
+const textsplitter = new RecursiveCharacterTextSplitter({
+  chunkSize: 500,
+  chunkOverlap: 100,
+});
+
+→ Text ke choto choto chunk e vag korar tool toiri kora hocche.
+
+→ chunkSize: 500 — protita chunk e maximum 500 characters thakbe.
+  Keno 500? Karon:
+  - Onek boro text ekbar e LLM e pathale relevant part khuije pay na
+  - Choto chunk hole specific answer dite pare
+  - Embedding o choto text e better kaj kore
+
+→ chunkOverlap: 100 — 2 ta consecutive chunk er moddhe 100 characters common thakbe.
+  Keno overlap? Karon:
+  - Jodi ekta important sentence 2 ta chunk er boundary te pore, tahole overlap
+    thakle sei sentence ta haray na
+  - Example:
+    Chunk 1: "...company founded in 2020. Our mission is to"
+    Chunk 2: "Our mission is to provide the best AI solutions..."
+    → "Our mission is to" part ta duita chunk ei ache — tai info loss hoy na
+
+→ "Recursive" mane: prothome paragraph boundary (\n\n) te split try kore,
+  na parle sentence (\n) e, tarpor space e, sheshe character e — intelligently
+  split kore.
+
+
+------------------------------------------------------------
+LINE 33: Text Split Execute Kora
+------------------------------------------------------------
+
+const texts = await textsplitter.splitText(doc[0].pageContent);
+
+→ doc[0].pageContent — purota PDF er text content (ekta long string).
+→ splitText() sei long string ke 500 character er choto choto chunk e vag kore.
+→ texts hocche ekta string array.
+  Jemon: ["chunk1 text...", "chunk2 text...", "chunk3 text...", ...]
+→ Apnar case e 35 ta chunk toiri hoyechilo.
+
+
+------------------------------------------------------------
+LINE 35-40: Chunks ke LangChain Document Format e Convert Kora
+------------------------------------------------------------
+
+const documents = texts.map((chunk) => {
+  return new Document({
+    pageContent: chunk,
+    metadata: doc[0].metadata,
+  });
+});
+
+→ Protita text chunk ke LangChain er Document object e convert kora hocche.
+→ Protita Document e 2 ta jinis thake:
+  - pageContent: chunk er actual text
+  - metadata: original PDF er metadata (source file name, page count etc.)
+→ Keno Document class use kora hoy:
+  - LangChain er sob tool (vector store, retriever) Document format e kaj kore
+  - metadata thakle poore retrieve korar somoy bujha jay chunk ta kon file theke
+    eshechilo
+
+→ IMPORTANT: metadata lowercase 'm' hote hobe. Uppercase 'M' (Metadata) likhle
+  LangChain chine na — error dey. (Ei bug ta age chilo apnar code e, fix kora
+  hoyeche.)
+
+
+------------------------------------------------------------
+LINE 43: Vector Database e Store Kora
+------------------------------------------------------------
+
+await vectorStore.addDocuments(documents);
+
+→ ETA hocche main line — behind the scene 2 ta kaj hoy:
+
+  Step 1 — Embedding Generate:
+  Protita document er pageContent ke OpenAI er embedding model e pathay.
+  "ami valo achi" → [0.23, -0.45, 0.12, ...] (1536 ta number er array)
+  Ei number gulo text er meaning represent kore.
+
+  Step 2 — Pinecone e Store:
+  Generated vectors + metadata + text Pinecone database e upsert (insert/update)
+  kore.
+
+→ maxConcurrency: 5 er jonno, 5 ta document er embedding ek sathe generate hoy —
+  tai fast hoy.
+→ Internally 100 ta kore batch e Pinecone e pathay (chunkSize = 100 inside
+  LangChain).
+
+
+------------------------------------------------------------
+LINE 46: Data Delete (Commented Out)
+------------------------------------------------------------
+
+// await pineconeIndex.namespace("").deleteAll();
+
+→ Pinecone index er default namespace er sob data delete kore dey.
+→ Comment kora ache — uncomment korle sob data ure jabe.
+→ Apnar case e useful — duplicate 70 ta row theke 35 e anar jonno eta use
+  korte paren.
+
+
+============================================================
+        FULL FLOW SUMMARY (Puro Process Ekbar e)
+============================================================
+
+PDF File
+   ↓ (PDFLoader)
+Raw Text (pura PDF er text ek string e)
+   ↓ (RecursiveCharacterTextSplitter)
+Text Chunks (500 char er 35 ta choto piece)
+   ↓ (Document class)
+LangChain Documents (proper format e convert)
+   ↓ (vectorStore.addDocuments)
+   ├── OpenAI Embedding API call (text → vector)
+   └── Pinecone Upsert (vector + metadata store)
+   ↓
+Vector Database e Data Stored! Ready for search/retrieval.
+
+
+============================================================
+        PACKAGES USED & THEIR PURPOSE
+============================================================
+
+1. @langchain/community    → PDF loader
+2. @langchain/textsplitters → Text splitting tool
+3. @langchain/core         → Document class
+4. @langchain/openai       → OpenAI embedding model
+5. @langchain/pinecone     → LangChain-Pinecone bridge
+6. @pinecone-database/pinecone → Pinecone SDK (v4 use korte hobe,
+                                  v7 LangChain er sathe compatible na)
+7. pdf-parse               → PDFLoader internally eta use kore
+                              PDF theke text extract korte
