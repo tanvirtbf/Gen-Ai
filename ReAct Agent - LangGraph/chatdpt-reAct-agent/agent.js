@@ -1,6 +1,9 @@
 import { ChatGroq } from "@langchain/groq";
 import { createAgent } from "langchain";
 import { TavilySearch } from "@langchain/tavily";
+import { tool } from "@langchain/core/tools";
+import * as z from "zod";
+import { writeFileSync } from "node:fs";
 
 async function main() {
   const model = new ChatGroq({
@@ -15,19 +18,46 @@ async function main() {
     topic: "general",
   });
 
+  const calenderEvents = tool(
+    async ({ query }) => {
+      // Google calender logic goes here..
+      return JSON.stringify([
+        { title: "Meeting with Tanvir", time: "2PM", location: "Dhaka" },
+      ]);
+    },
+    {
+      name: "get-calender-events",
+      description: "Call to get the calender events",
+      schema: z.object({
+        query: z.string().describe("The query to use in calender event search"),
+      }),
+    },
+  );
+
   const agent = createAgent({
     model: model,
-    tools: [search],
+    tools: [search, calenderEvents],
   });
 
   const result = await agent.invoke({
     messages: [
       {
+        role: "system",
+        content: `You are a personal assistant. Use provided tools to get the information if you don't have it. Current date and time : ${new Date().toUTCString()}`,
+      },
+      {
         role: "user",
-        content: "what is the current weather in dhaka ?",
+        content: "Hi, Do I have any meeting today ?",
       },
     ],
   });
+
+  const drawableGraphGraphState = await agent.getGraphAsync();
+  const graphStateImage = await drawableGraphGraphState.drawMermaidPng();
+  const graphStateArrayBuffer = await graphStateImage.arrayBuffer();
+
+  const filePath = "./graphState.png";
+  writeFileSync(filePath, new Uint8Array(graphStateArrayBuffer));
 
   console.log(
     "Assistant : ",
