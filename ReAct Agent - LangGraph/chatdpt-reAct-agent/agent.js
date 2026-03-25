@@ -1,10 +1,12 @@
 import readline from "node:readline/promises";
+import { writeFileSync } from "node:fs";
+import { MemorySaver } from "@langchain/langgraph";
 import { ChatGroq } from "@langchain/groq";
 import { createAgent } from "langchain";
 import { TavilySearch } from "@langchain/tavily";
 import { tool } from "@langchain/core/tools";
 import * as z from "zod";
-import { writeFileSync } from "node:fs";
+import { threadId } from "node:worker_threads";
 
 async function main() {
   const model = new ChatGroq({
@@ -35,9 +37,12 @@ async function main() {
     },
   );
 
+  const checkpointer = new MemorySaver();
+
   const agent = createAgent({
     model: model,
     tools: [search, calenderEvents],
+    checkpointer: checkpointer,
   });
 
   const rl = readline.createInterface({
@@ -63,6 +68,8 @@ async function main() {
           content: userQuery,
         },
       ],
+    }, {
+        configurable: { thread_id: '1' }
     });
     console.log(
       "Assistant : ",
