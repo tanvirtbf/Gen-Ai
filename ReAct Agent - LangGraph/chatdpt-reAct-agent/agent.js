@@ -1,5 +1,5 @@
 import { ChatGroq } from "@langchain/groq";
-import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { createAgent } from "langchain";
 import { TavilySearch } from "@langchain/tavily";
 
 async function main() {
@@ -15,8 +15,8 @@ async function main() {
     topic: "general",
   });
 
-  const agent = createReactAgent({
-    llm: model,
+  const agent = createAgent({
+    model: model,
     tools: [search],
   });
 
