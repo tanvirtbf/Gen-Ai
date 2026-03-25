@@ -1,3 +1,4 @@
+import readline from "node:readline/promises";
 import { ChatGroq } from "@langchain/groq";
 import { createAgent } from "langchain";
 import { TavilySearch } from "@langchain/tavily";
@@ -39,18 +40,35 @@ async function main() {
     tools: [search, calenderEvents],
   });
 
-  const result = await agent.invoke({
-    messages: [
-      {
-        role: "system",
-        content: `You are a personal assistant. Use provided tools to get the information if you don't have it. Current date and time : ${new Date().toUTCString()}`,
-      },
-      {
-        role: "user",
-        content: "Hi, Do I have any meeting today ?",
-      },
-    ],
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
   });
+
+  while (true) {
+    const userQuery = await rl.question("You: ");
+
+    if (userQuery === "bye") {
+      break;
+    }
+
+    const result = await agent.invoke({
+      messages: [
+        {
+          role: "system",
+          content: `You are a personal assistant. Use provided tools to get the information if you don't have it. Current date and time : ${new Date().toUTCString()}`,
+        },
+        {
+          role: "user",
+          content: userQuery,
+        },
+      ],
+    });
+    console.log(
+      "Assistant : ",
+      result.messages[result.messages.length - 1].content,
+    );
+  }
 
   const drawableGraphGraphState = await agent.getGraphAsync();
   const graphStateImage = await drawableGraphGraphState.drawMermaidPng();
@@ -58,11 +76,6 @@ async function main() {
 
   const filePath = "./graphState.png";
   writeFileSync(filePath, new Uint8Array(graphStateArrayBuffer));
-
-  console.log(
-    "Assistant : ",
-    result.messages[result.messages.length - 1].content,
-  );
 }
 
 main();
