@@ -1,9 +1,14 @@
+import { chatAgent } from "../agents/chatAgent.js";
+
 export class ChatController {
   async chatPost(req, res, next) {
-    try {
-      const { query } = req.body;
+    const { query } = req.body;
+    console.log(query);
+    const result = await chatAgent(String(query));
 
-      res.status(200).json({ success: true, query });
+    console.log("result: ", result);
+    try {
+      res.status(200).json({ success: true, assistant: result });
     } catch (error) {
       res.status(500).json({ error: "error" });
     }

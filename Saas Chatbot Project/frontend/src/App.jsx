@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+
+const fetchApi = async (query) => {
+  try {
+    const response = await fetch("http://localhost:3001/chat/agent", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const data = await response.json();
+    console.log("Api Data: ", data);
+  } catch (error) {
+    console.error("API Error:", error);
+  }
+};
 
 const App = () => {
   const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    if (!query) return;
+  function handleClick() {
+    fetchApi(query);
+  }
 
-    const fetchApi = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/chat/agent", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ query }),
-        });
-
-        const data = await response.json();
-        console.log('Api Data: ',data);
-      } catch (error) {
-        console.error("API Error:", error);
-      }
-    };
-
-    fetchApi();
-  }, [query]);
   return (
     <div>
       <input
@@ -33,6 +32,7 @@ const App = () => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
+      <button onClick={handleClick}>Generate</button>
     </div>
   );
 };
