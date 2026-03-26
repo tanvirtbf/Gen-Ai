@@ -1,4 +1,5 @@
 import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
+import { writeFileSync } from "node:fs";
 
 /**
  * Cut the vegetables
@@ -66,6 +67,15 @@ const graph = new StateGraph(MessagesAnnotation)
 const biriyaniProcess = graph.compile();
 
 async function main() {
+  // Graph Visualization
+  const drawableGraphGraphState = await biriyaniProcess.getGraphAsync();
+  const graphStateImage = await drawableGraphGraphState.drawMermaidPng();
+  const graphStateArrayBuffer = await graphStateImage.arrayBuffer();
+
+  const filePath = "./graphState.png";
+  writeFileSync(filePath, new Uint8Array(graphStateArrayBuffer));
+
+  // Invoke the Graph
   const finalState = await biriyaniProcess.invoke({
     messages: [],
   });
