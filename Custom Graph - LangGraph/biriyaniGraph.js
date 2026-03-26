@@ -1,4 +1,4 @@
-import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
+import { END, MessagesAnnotation, StateGraph } from "@langchain/langgraph";
 import { writeFileSync } from "node:fs";
 
 /**
@@ -62,7 +62,10 @@ const graph = new StateGraph(MessagesAnnotation)
   .addEdge("cutTheVegetables", "boilTheRice")
   .addEdge("boilTheRice", "addTheSalt")
   .addEdge("addTheSalt", "tasteTheBiriyani")
-  .addConditionalEdges("tasteTheBiriyani", whereToGo);
+  .addConditionalEdges("tasteTheBiriyani", whereToGo, {
+    __end__: END,
+    addTheSalt: "addTheSalt",
+  });
 
 const biriyaniProcess = graph.compile();
 
