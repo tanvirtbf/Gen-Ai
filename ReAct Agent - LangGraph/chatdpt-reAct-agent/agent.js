@@ -6,7 +6,6 @@ import { createAgent } from "langchain";
 import { TavilySearch } from "@langchain/tavily";
 import { tool } from "@langchain/core/tools";
 import * as z from "zod";
-import { threadId } from "node:worker_threads";
 
 async function main() {
   const model = new ChatGroq({
