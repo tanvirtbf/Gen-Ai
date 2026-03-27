@@ -53,6 +53,8 @@ async function callModel(state) {
 
   const response = await llm.invoke(state.messages); // sob message diye dey llm model ke response generate korte
   // console.log("response in callModel: ", response);
+  
+  // Add the LLM's response as a new message to the conversation state (appended to existing messages)
   return { messages: [response] };
 }
 
