@@ -12,3 +12,22 @@ export const createEventTool = tool(
     schema: z.object({}),
   },
 );
+
+export const getEventsTool = tool(
+    async () => {
+         // Google calender logic goes
+        return JSON.stringify([
+            {
+                title: 'Meeting with Sujoy',
+                date: '26th August 2025',
+                time: '2PM',
+                location: 'Dhaka'
+            }
+        ])
+    },
+    {
+        name: 'get-events',
+        description: 'Call to get the calender events',
+        schema: z.object({})
+    }
+)
