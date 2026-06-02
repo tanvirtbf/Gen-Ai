@@ -41,7 +41,6 @@ app.get("/callback", async (req, res) => {
   res.send("Connected You can close this tab now");
 });
 
-
 app.listen(3600, () => {
     console.log(`Server is running on port: http://localhost:3600`)
 })
