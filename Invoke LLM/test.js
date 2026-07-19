@@ -25,6 +25,13 @@ async function main() {
 await main();
 
 
+async function webSearch({ query }) {
+  // Here we will do tavily api call
+
+  return 'Iphone was launched on 20 september 2024'
+}
+
+
 
 
 
