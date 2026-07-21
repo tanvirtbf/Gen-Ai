@@ -42,13 +42,28 @@ async function main() {
     tool_choice: "auto",
   });
 
-  const llm_result = JSON.stringify(completions.choices[0].message, null, 2)
+  const toolCalls = completions.choices[0].message.tool_calls
 
-  if(llm_result.function.name === "webSearch") {
-    var result = await webSearch({ query : "What is the current weather in dhaka?" })
+  if(!toolCalls) {
+    console.log(`Assistant: ${completions.choices[0].message.content}`)
+
+    return;
   }
 
-  console.log(result);
+  for(const tool of toolCalls) {
+   console.log('tools: ', tool) 
+   const functionName = tool.function.name;
+   const params = tool.function.arguments;
+
+   if(functionName==="webSearch"){
+    const result = await webSearch(JSON.parse(params))
+    console.log(result)
+   }
+  }
+
+  
+
+  // console.log(JSON.stringify(completions.choices[0].message));
 }
 
 await main();
