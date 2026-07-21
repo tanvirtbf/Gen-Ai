@@ -4,32 +4,71 @@ import Groq from "groq-sdk";
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 async function main() {
-  const completions =await groq.chat.completions.create({
+  const completions = await groq.chat.completions.create({
     model: "llama-3.3-70b-versatile",
     temperature: 1,
     messages: [
       {
         role: "system",
-        content: `You are a smart personal assistant who answers the asked questions.`,
+        content: `You are a smart personal assistant who answers the asked questions. 
+        You have access to following tools: 
+        1. searchWeb({query}: {query: string}) // Search the latest information and realtime data on the internet`,
       },
       {
         role: "user",
         content: "What is the current weather in dhaka?",
       },
     ],
+    tools: [
+      {
+        type: "function",
+        function: {
+          name: "webSearch",
+          description:
+            "Search the latest information and realtime data on the internet",
+          parameters: {
+            type: "object",
+            properties: {
+              query: {
+                type: "string",
+                description: "The search query to perform search on",
+              },
+            },
+            required: ["query"],
+          },
+        },
+      },
+    ],
+    tool_choice: "auto",
   });
 
-  console.log(completions.choices[0].message.content);
+  const llm_result = JSON.stringify(completions.choices[0].message, null, 2)
+
+  if(llm_result.function.name === "webSearch") {
+    var result = await webSearch({ query : "What is the current weather in dhaka?" })
+  }
+
+  console.log(result);
 }
 
 await main();
 
-
 async function webSearch({ query }) {
   // Here we will do tavily api call
 
-  return 'Iphone was launched on 20 september 2024'
+  return "Iphone was launched on 20 september 2024";
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
