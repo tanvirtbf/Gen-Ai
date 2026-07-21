@@ -61,7 +61,6 @@ async function main() {
    }
   }
 
-  
 
   // console.log(JSON.stringify(completions.choices[0].message));
 }
