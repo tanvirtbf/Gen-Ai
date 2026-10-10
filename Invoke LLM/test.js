@@ -1,33 +1,89 @@
 import "dotenv/config";
 import Groq from "groq-sdk";
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-const messages = [
-  {
-    role: "system",
-    content: `You are a smart personal assistant who answers the asked questions. 
-        You have access to following tools: 
-        1. searchWeb({query}: {query: string}) // Search the latest information and realtime data on the internet`,
-  },
-  {
-    role: "user",
-    content: "What is the current weather in dhaka?",
-  },
-];
 
-async function main() {
-  const completions = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
-    temperature: 1,
-    messages: messages,
-  });
+async function main () {
+    const completions = await groq.chat.completions.create({
+        temperature: 0, 
+        model: 'openai/gpt-oss-120b',
+        messages: [
+            {
+                role: 'system', 
+                content: `You Are a smart personal Assistant Who Answers the asked question!`
+            },
+            {
+                role: 'user',
+                content: `Hello brother`
+            }
+        ],
+    })
 
-  console.log('message 1 : ', JSON.stringify(completions.choices[0].message))
-
+    console.log('Message : ', completions)
 }
 
+
 await main();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import "dotenv/config";
+// import Groq from "groq-sdk";
+
+// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+// // const messages = [
+// //   {
+// //     role: "system",
+// //     content: `You are a smart personal assistant who answers the asked questions. 
+// //         You have access to following tools: 
+// //         1. searchWeb({query}: {query: string}) // Search the latest information and realtime data on the internet`,
+// //   },
+// //   {
+// //     role: "user",
+// //     content: "What is the current weather in dhaka?",
+// //   },
+// // ];
+
+// const messages = [
+//   {
+//     role: 'system', 
+//     content : 'You are a smart personal assistant who answers the asked questions.',
+//   }, 
+//   {
+//     role: 'user',
+//     content: 'Hello',
+//   }
+// ]
+
+// async function main() {
+//   const completions = await groq.chat.completions.create({
+//     model: "openai/gpt-oss-120b",
+//     temperature: 1,
+//     messages: messages,
+//   });
+
+//   console.log('message 1 : ', JSON.stringify(completions.choices[0].message.content))
+
+// }
+
+// await main();
 
 
 
