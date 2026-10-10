@@ -4,29 +4,19 @@ import Groq from "groq-sdk";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// const messages = [
-//   {
-//     role: "system",
-//     content: `You are a smart personal assistant who answers the asked questions. 
-//         You have access to following tools: 
-//         1. searchWeb({query}: {query: string}) // Search the latest information and realtime data on the internet`,
-//   },
-//   {
-//     role: "user",
-//     content: "What is the current weather in dhaka?",
-//   },
-// ];
-
 const messages = [
   {
-    role: 'system', 
-    content : 'You are a smart personal assistant who answers the asked questions.',
-  }, 
+    role: "system",
+    content: `You are a smart personal assistant who answers the asked questions. 
+        You have access to following tools: 
+        1. searchWeb({query}: {query: string}) // Search the latest information and realtime data on the internet`,
+  },
   {
-    role: 'user',
-    content: 'Hello',
-  }
-]
+    role: "user",
+    content: "What is the current weather in dhaka?",
+  },
+];
+
 
 async function main() {
   const completions = await groq.chat.completions.create({
@@ -55,7 +45,15 @@ async function main() {
     tool_choice: 'auto',
   });
 
-  console.log('message 1 : ', JSON.stringify(completions.choices[0].message.content))
+  console.log(completions.choices[0].message.tool_calls)
+
+  for(let i=0; i<completions.choices[0].message.tool_calls.length; i++){
+    if(completions.choices[0].message.tool_calls[i].function.name === "webSearch") {
+      var result = await webSearch({})
+    }
+  }
+
+  console.log("Result : ", result)
 
 }
 
