@@ -33,6 +33,26 @@ async function main() {
     model: "openai/gpt-oss-120b",
     temperature: 1,
     messages: messages,
+    tools: [
+      {
+        type: 'function',
+        function: {
+          name: 'webSearch',
+          description: 'Search the latest information and realtime data on the internet',
+          parameters: {
+            type: 'object',
+            properties: {
+              query: {
+                type: 'string',
+                description: 'The search query to perform search on',
+              }
+            },
+            required: ['query']
+          }
+        }
+      }
+    ],
+    tool_choice: 'auto',
   });
 
   console.log('message 1 : ', JSON.stringify(completions.choices[0].message.content))
