@@ -1,21 +1,7 @@
+import 'dotenv/config'
+import Groq from 'groq-sdk'
 
-import "dotenv/config";
-import Groq from "groq-sdk";
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-const messages = [
-  {
-    role: "system",
-    content: `You are a smart personal assistant who answers the asked questions. 
-        You have access to following tools: 
-        1. searchWeb({query}: {query: string}) // Search the latest information and realtime data on the internet`,
-  },
-  {
-    role: "user",
-    content: "What is the current weather in dhaka?",
-  },
-];
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 
 async function main() {
@@ -45,41 +31,118 @@ async function main() {
     tool_choice: 'auto',
   });
 
-  // console.log(completions.choices[0].message.tool_calls)
-
-  const toolCalls = completions.choices[0].message.tool_calls
-
-  if(!toolCalls) {
-    console.log("Result : ", completions.choices[0].message.content)
-    return
-  }
-
-  for(let tools of toolCalls) {
-    // console.log(tools)
-
-    const functionName = tools.function.name;
-    const functionParams = JSON.parse(tools.function.arguments);
-
-    if(functionName==="webSearch") {
-      const result = await webSearch(functionParams)
-      console.log("Result : ", result)
-
-      return 
-    }
-
-  }
-
-
+  
 }
 
-await main();
 
 
-async function webSearch({ query }) {
-    // Here we will d o tavily api call
 
-    return "Iphone was launched on 20 September 2024"
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import "dotenv/config";
+// import Groq from "groq-sdk";
+
+// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+// const messages = [
+//   {
+//     role: "system",
+//     content: `You are a smart personal assistant who answers the asked questions. 
+//         You have access to following tools: 
+//         1. searchWeb({query}: {query: string}) // Search the latest information and realtime data on the internet`,
+//   },
+//   {
+//     role: "user",
+//     content: "What is the current weather in dhaka?",
+//   },
+// ];
+
+
+// async function main() {
+//   const completions = await groq.chat.completions.create({
+//     model: "openai/gpt-oss-120b",
+//     temperature: 1,
+//     messages: messages,
+//     tools: [
+//       {
+//         type: 'function',
+//         function: {
+//           name: 'webSearch',
+//           description: 'Search the latest information and realtime data on the internet',
+//           parameters: {
+//             type: 'object',
+//             properties: {
+//               query: {
+//                 type: 'string',
+//                 description: 'The search query to perform search on',
+//               }
+//             },
+//             required: ['query']
+//           }
+//         }
+//       }
+//     ],
+//     tool_choice: 'auto',
+//   });
+
+//   // console.log(completions.choices[0].message.tool_calls)
+
+//   const toolCalls = completions.choices[0].message.tool_calls
+
+//   if(!toolCalls) {
+//     console.log("Result : ", completions.choices[0].message.content)
+//     return
+//   }
+
+//   for(let tools of toolCalls) {
+//     // console.log(tools)
+
+//     const functionName = tools.function.name;
+//     const functionParams = JSON.parse(tools.function.arguments);
+
+//     if(functionName==="webSearch") {
+//       const result = await webSearch(functionParams)
+//       console.log("Result : ", result)
+
+//       return 
+//     }
+
+//   }
+
+
+// }
+
+// await main();
+
+
+// async function webSearch({ query }) {
+//     // Here we will d o tavily api call
+
+//     return "Iphone was launched on 20 September 2024"
+// }
 
 
 
