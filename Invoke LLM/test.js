@@ -1,33 +1,30 @@
-import "dotenv/config";
-import Groq from "groq-sdk";
+import "dotenv/config"
+import Groq from "groq-sdk"
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
+const message = [
+    {
+        role: 'system',
+        content: 'You are a smart personal assistant who asked the question'
+    },
+    {
+        role: 'user',
+        content: 'Hello'
+    }
+]
 
 async function main () {
     const completions = await groq.chat.completions.create({
-        temperature: 0, 
+        temperature: 2, 
         model: 'openai/gpt-oss-120b',
-        messages: [
-            {
-                role: 'system', 
-                content: `You Are a smart personal Assistant Who Answers the asked question!`
-            },
-            {
-                role: 'user',
-                content: `Hello brother`
-            }
-        ],
+        messages: message,
     })
 
-    console.log('Message : ', completions)
+    console.log("Message : ", completions.choices[0].message.content)
 }
 
-
 await main();
-
-
-
 
 
 
