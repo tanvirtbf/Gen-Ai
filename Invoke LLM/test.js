@@ -58,7 +58,7 @@ async function main() {
     // console.log(tools)
 
     const functionName = tools.function.name;
-    const functionParams = tools.function.arguments;
+    const functionParams = JSON.parse(tools.function.arguments);
 
     if(functionName==="webSearch") {
       const result = await webSearch(functionParams)
