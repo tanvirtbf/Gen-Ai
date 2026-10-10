@@ -45,15 +45,30 @@ async function main() {
     tool_choice: 'auto',
   });
 
-  console.log(completions.choices[0].message.tool_calls)
+  // console.log(completions.choices[0].message.tool_calls)
 
-  for(let i=0; i<completions.choices[0].message.tool_calls.length; i++){
-    if(completions.choices[0].message.tool_calls[i].function.name === "webSearch") {
-      var result = await webSearch({})
-    }
+  const toolCalls = completions.choices[0].message.tool_calls
+
+  if(!toolCalls) {
+    console.log("Result : ", completions.choices[0].message.content)
+    return
   }
 
-  console.log("Result : ", result)
+  for(let tools of toolCalls) {
+    // console.log(tools)
+
+    const functionName = tools.function.name;
+    const functionParams = tools.function.arguments;
+
+    if(functionName==="webSearch") {
+      const result = await webSearch(functionParams)
+      console.log("Result : ", result)
+
+      return 
+    }
+
+  }
+
 
 }
 
