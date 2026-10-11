@@ -3,7 +3,6 @@ import Groq from "groq-sdk"
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-
 async function main () {
   const completions = await groq.chat.completions.create({
     temperature: 0.2, 
@@ -52,7 +51,14 @@ async function main () {
   }
 
   for(let tool of toolCall) {
-    console.log(tool)
+    const functionName = tool.function.name;
+    const functionParams = JSON.parse(tool.function.arguments)
+
+    if(functionName==="webSearch") {
+      const result = await webSearch({})
+      console.log("Result : ", result)
+      return;
+    }
   }
 
 }
@@ -64,154 +70,3 @@ async function webSearch({ query }) {
 
   return 'Hello World from webSearch!'
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import "dotenv/config";
-// import Groq from "groq-sdk";
-
-// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-// const messages = [
-//   {
-//     role: "system",
-//     content: `You are a smart personal assistant who answers the asked questions. 
-//         You have access to following tools: 
-//         1. searchWeb({query}: {query: string}) // Search the latest information and realtime data on the internet`,
-//   },
-//   {
-//     role: "user",
-//     content: "What is the current weather in dhaka?",
-//   },
-// ];
-
-
-// async function main() {
-//   const completions = await groq.chat.completions.create({
-//     model: "openai/gpt-oss-120b",
-//     temperature: 1,
-//     messages: messages,
-//     tools: [
-//       {
-//         type: 'function',
-//         function: {
-//           name: 'webSearch',
-//           description: 'Search the latest information and realtime data on the internet',
-//           parameters: {
-//             type: 'object',
-//             properties: {
-//               query: {
-//                 type: 'string',
-//                 description: 'The search query to perform search on',
-//               }
-//             },
-//             required: ['query']
-//           }
-//         }
-//       }
-//     ],
-//     tool_choice: 'auto',
-//   });
-
-//   // console.log(completions.choices[0].message.tool_calls)
-
-//   const toolCalls = completions.choices[0].message.tool_calls
-
-//   if(!toolCalls) {
-//     console.log("Result : ", completions.choices[0].message.content)
-//     return
-//   }
-
-//   for(let tools of toolCalls) {
-//     // console.log(tools)
-
-//     const functionName = tools.function.name;
-//     const functionParams = JSON.parse(tools.function.arguments);
-
-//     if(functionName==="webSearch") {
-//       const result = await webSearch(functionParams)
-//       console.log("Result : ", result)
-
-//       return 
-//     }
-
-//   }
-
-
-// }
-
-// await main();
-
-
-// async function webSearch({ query }) {
-//     // Here we will d o tavily api call
-
-//     return "Iphone was launched on 20 September 2024"
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import "dotenv/config";
-// import Groq from "groq-sdk";
-
-// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-// async function main() {
-//   const completions = await groq.chat.completions.create({
-//     model: "llama-3.3-70b-versatile",
-//     temperature: 1, // range = 0-2
-//     // top_p: 0.5, // range = 0-1
-//     max_completion_tokens: 1000,
-//     frequency_penalty: 2,
-//     presence_penalty: 1,
-//     messages: [
-//       {
-//         role: "system",
-//         content: `You are Jarvis. A smart review grader. Your task is to analyse given review and return the sentiment. Classify the review as positive, neutral or negative. You must return the result in valid JSON structure
-//         example: { "sentiment" : "Negative" }`,
-//       },
-//       {
-//         role: "user",
-//         content: `Review: These headphones arrived quickly and look great, but the left earcup stopped working after a week.
-//         Sentiment: `,
-//       },
-//     ],
-//   });
-
-//   console.log("completions: ", completions.choices[0].message.content);
-// }
-
-// main();
