@@ -1,14 +1,23 @@
-import 'dotenv/config'
-import Groq from 'groq-sdk'
+import "dotenv/config"
+import Groq from "groq-sdk"
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 
-async function main() {
+async function main () {
   const completions = await groq.chat.completions.create({
-    model: "openai/gpt-oss-120b",
-    temperature: 1,
-    messages: messages,
+    temperature: 0.2, 
+    model: 'openai/gpt-oss-120b',
+    messages: [
+      {
+        role: 'system',
+        content: 'You are a smart Personal Assistant who answers the asked question'
+      },
+      {
+        role: 'user',
+        content: 'What is the current weather in Dhaka?'
+      }
+    ],
     tools: [
       {
         type: 'function',
@@ -20,7 +29,7 @@ async function main() {
             properties: {
               query: {
                 type: 'string',
-                description: 'The search query to perform search on',
+                desciption: 'The search query to perform search on',
               }
             },
             required: ['query']
@@ -28,19 +37,33 @@ async function main() {
         }
       }
     ],
-    tool_choice: 'auto',
-  });
+    tool_choice: 'auto'
+  })
 
-  
+
+  // console.log('Result : ', completions.choices[0].message.tool_calls)
+
+
+  const toolCall = completions.choices[0].message.tool_calls 
+
+  if(!toolCall) {
+    console.log("Result : ", completions.choices[0].message.content)
+    return 
+  }
+
+  for(let tool of toolCall) {
+    console.log(tool)
+  }
+
 }
 
 
+await main();
 
+async function webSearch({ query }) {
 
-
-
-
-
+  return 'Hello World from webSearch!'
+}
 
 
 
