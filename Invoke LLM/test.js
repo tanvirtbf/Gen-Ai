@@ -1,3 +1,29 @@
+import "dotenv/config";
+import Groq from "groq-sdk";
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+async function main() {
+  const completions = await groq.chat.completions.create({
+    temperature: 0,
+    model: "openai/gpt-oss-120b",
+    messages: [
+      {
+        role: "system",
+        content: "You are a smart AI Assistant who answers the asked question",
+      },
+      {
+        role: "user",
+        content: "Hi",
+      },
+    ],
+  });
+
+  console.log(completions.choices[0].message.content);
+}
+
+await main();
+
 
 
 
@@ -30,7 +56,7 @@
 
 // async function main () {
 //   const completions = await groq.chat.completions.create({
-//     temperature: 0.2, 
+//     temperature: 0.2,
 //     model: 'openai/gpt-oss-120b',
 //     messages: [
 //       {
@@ -64,15 +90,13 @@
 //     tool_choice: 'auto'
 //   })
 
-
 //   // console.log('Result : ', completions.choices[0].message.tool_calls)
 
-
-//   const toolCall = completions.choices[0].message.tool_calls 
+//   const toolCall = completions.choices[0].message.tool_calls
 
 //   if(!toolCall) {
 //     // console.log("Result : ", completions.choices[0].message.content)
-//     return 
+//     return
 //   }
 
 //   for(let tool of toolCall) {
@@ -87,7 +111,6 @@
 //   }
 
 // }
-
 
 // await main();
 
