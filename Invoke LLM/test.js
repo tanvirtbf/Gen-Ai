@@ -14,38 +14,56 @@ async function main() {
       },
       {
         role: "user",
-        content: "Hi",
+        content: "What is the current weather in dhaka?",
       },
     ],
+    tools: [
+      {
+        type: "function",
+        function: {
+          name: "webSearch",
+          description:
+            "Search the latest information and realtime data on the internet",
+          parameters: {
+            type: "object",
+            properties: {
+              query: {
+                type: "string",
+                desciption: "The search query to perform search on",
+              },
+            },
+            required: ["query"],
+          },
+        },
+      },
+    ],
+    tool_choice: "auto",
   });
 
-  console.log(completions.choices[0].message.content);
+  const toolCall = completions.choices[0].message.tool_calls;
+
+  if (!toolCall) {
+    console.log(completions.choices[0].message.content);
+    return;
+  }
+
+  for(let tool of toolCall) {
+    const functionName = tool.function.name;
+    const functionParams = tool.function.arguments
+    if(tool.function.name === "webSearch") {
+      const result = await webSearch(functionParams)
+      console.log('result : ', result)
+    }
+  }
+
+  // console.log(completions.choices[0]);
+}
+
+async function webSearch({ query }) {
+  return "Hello My Friend";
 }
 
 await main();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import "dotenv/config"
 // import Groq from "groq-sdk"
