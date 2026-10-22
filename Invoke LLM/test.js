@@ -1,4 +1,3 @@
-
 import "dotenv/config"
 import Groq from "groq-sdk"
 import { tavily } from "@tavily/core"
@@ -8,7 +7,7 @@ const tvly = new tavily({ apiKey: process.env.TAVILY_API_KEY })
 
 async function main () {
   const completions = await groq.chat.completions.create({
-    temperature: 0.2,
+    temperature: 0.2, 
     model: 'openai/gpt-oss-120b',
     messages: [
       {
@@ -42,13 +41,15 @@ async function main () {
     tool_choice: 'auto'
   })
 
-  // console.log('Result : ', completions.choices[0].message.tool_calls)
 
-  const toolCall = completions.choices[0].message.tool_calls
+  console.log('Result : ', completions.choices[0].message.tool_calls)
+
+
+  const toolCall = completions.choices[0].message.tool_calls 
 
   if(!toolCall) {
     // console.log("Result : ", completions.choices[0].message.content)
-    return
+    return 
   }
 
   for(let tool of toolCall) {
@@ -63,6 +64,7 @@ async function main () {
   }
 
 }
+
 
 await main();
 
