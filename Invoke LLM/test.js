@@ -42,7 +42,7 @@ async function main () {
   })
 
 
-  console.log('Result : ', completions.choices[0].message.tool_calls)
+  // console.log('Result : ', completions.choices[0].message.tool_calls)
 
 
   const toolCall = completions.choices[0].message.tool_calls 
