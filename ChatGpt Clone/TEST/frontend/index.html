@@ -1,15 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CHATDPT</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-neutral-900 text-white overflow-x-hidden">
+    <div class="container mx-auto max-w-3xl pb-44">
+      <!-- Messages goes here -->
 
-</head>
-<body>
-    <h1 class="text-red-200">Hello World!</h1>
+      <div class="my-6 bg-neutral-800 p-3 rounded-xl max-w-fit ml-auto">
+        Hi, How are you?
+      </div>
+
+      <!-- Assistant Message -->
+      <div max-w-fit>I am fine, How are you?</div>
+
+      <!-- Bottom textarea goes here -->
+      <div
+        class="fixed inset-x-0 bottom-0 flex items-center justify-center bg-neutral-900"
+      >
+        <div class="bg-neutral-800 p-2 rounded-3xl w-full max-w-3xl mb-4">
+          <textarea
+            class="w-full resize-none outline-0 p-3"
+            rows="2"
+          ></textarea>
+          <div class="flex items-center justify-end">
+            <button
+              class="bg-white px-4 py-2 rounded-full text-black cursor-pointer hover:bg-gray-300"
+            >
+              Ask
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
