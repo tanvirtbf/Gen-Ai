@@ -7,12 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
   <body class="bg-neutral-900 text-white overflow-x-hidden">
-    <div class="container mx-auto max-w-3xl pb-44">
+    <div class="container mx-auto max-w-3xl pb-44 px-2" id="chat-container">
       <!-- Messages goes here -->
-
-      <div class="my-6 bg-neutral-800 p-3 rounded-xl max-w-fit ml-auto">
-        Hi, How are you?
-      </div>
 
       <!-- Assistant Message -->
       <div max-w-fit>I am fine, How are you?</div>
@@ -25,9 +21,11 @@
           <textarea
             class="w-full resize-none outline-0 p-3"
             rows="2"
+            id="input"
           ></textarea>
           <div class="flex items-center justify-end">
             <button
+              id="ask-btn"
               class="bg-white px-4 py-2 rounded-full text-black cursor-pointer hover:bg-gray-300"
             >
               Ask
