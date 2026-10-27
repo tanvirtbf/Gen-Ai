@@ -1,5 +1,3 @@
- 
-
 const input = document.querySelector("#input");
 const chatContainer = document.querySelector("#chat-container");
 const askBtn = document.querySelector("#ask-btn");
@@ -7,7 +5,7 @@ const askBtn = document.querySelector("#ask-btn");
 input.addEventListener("keyup", handleEnter);
 askBtn.addEventListener("click", handleAsk);
 
-function generate(text) {
+async function generate(text) {
   // 1. append message to ui
   // 2. send it to the llm
   // 3. append response to the ui
@@ -18,23 +16,54 @@ function generate(text) {
 
   chatContainer.appendChild(msg);
   input.value = "";
+
+  await serverCall(text);
 }
 
-function handleAsk(e) {
+// <div max-w-fit>I am fine, How are you?</div>
+
+async function serverCall(text) {
+  const response = await fetch(`http://localhost:3001/chat`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message: text }),
+  });
+
+  const result = await response.json();
+  console.log(result);
+
+  if (!response.ok) {
+    const reply = document.createElement("div");
+    reply.className = "max-w-fit mr-auto";
+    reply.textContent = "Something Went Wrong";
+    chatContainer.appendChild(reply);
+    input.value = "";
+  } else {
+    const reply = document.createElement("div");
+    reply.className = "max-w-fit mr-auto";
+    reply.textContent = result.message;
+    chatContainer.appendChild(reply);
+    input.value = "";
+  }
+}
+
+async function handleAsk(e) {
   const text = input.value.trim();
   if (!text) {
     return;
   }
-  generate(text);
+  await generate(text);
 }
 
-function handleEnter(e) {
+async function handleEnter(e) {
   if (e.key === "Enter") {
     const text = input.value.trim();
     if (!text) {
       return;
     }
 
-    generate(text);
+    await generate(text);
   }
 }

@@ -9,7 +9,27 @@ export async function generate(text) {
   const messages = [
     {
       role: "system",
-      content: "You are a smart AI Assistant who answers the asked question",
+      content: `You are a smart AI assistant who answers questions clearly, accurately, and concisely.
+
+                Follow the response style demonstrated in these examples.
+
+                Example 1:
+                User: What is JavaScript?
+                Assistant: JavaScript is a programming language used to build interactive websites and applications.
+
+                Example 2:
+                User: What is Node.js?
+                Assistant: Node.js is a JavaScript runtime that allows you to run JavaScript outside the browser, commonly used for backend development.
+
+                Example 3:
+                User: What is an API?
+                Assistant: An API (Application Programming Interface) allows different software applications to communicate and exchange data.
+
+                Example 4:
+                User: Is React a programming language?
+                Assistant: No. React is a JavaScript library used to build user interfaces.
+
+                Always answer the user's actual question. If you are unsure about something, say so instead of making up information.`,
     },
     {
       role: "user",
@@ -59,13 +79,13 @@ export async function generate(text) {
 
       if (functionName === "webSearch") {
         const response = await webSearch(functionParam);
-        
+
         messages.push({
-            tool_call_id: tool.id,
-            role: 'assistant',
-            name: functionName,
-            content: response
-        })
+          tool_call_id: tool.id,
+          role: "assistant",
+          name: functionName,
+          content: response,
+        });
       }
     }
   }
