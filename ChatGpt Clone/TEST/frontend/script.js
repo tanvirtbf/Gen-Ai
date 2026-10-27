@@ -1,3 +1,5 @@
+ 
+
 const input = document.querySelector("#input");
 const chatContainer = document.querySelector("#chat-container");
 const askBtn = document.querySelector("#ask-btn");
