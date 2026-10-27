@@ -23,6 +23,10 @@ async function generate(text) {
 // <div max-w-fit>I am fine, How are you?</div>
 
 async function serverCall(text) {
+  const loading = document.createElement("div")
+  loading.className = "text-red-900 py-2 mr-auto "
+  loading.textContent = "Loading..."
+  chatContainer.appendChild(loading)
   const response = await fetch(`http://localhost:3001/chat`, {
     method: "POST",
     headers: {
@@ -34,18 +38,21 @@ async function serverCall(text) {
   const result = await response.json();
   console.log(result);
 
+
   if (!response.ok) {
     const reply = document.createElement("div");
     reply.className = "max-w-fit mr-auto";
     reply.textContent = "Something Went Wrong";
     chatContainer.appendChild(reply);
     input.value = "";
+    loading.textContent = ""
   } else {
     const reply = document.createElement("div");
     reply.className = "max-w-fit mr-auto";
     reply.textContent = result.message;
     chatContainer.appendChild(reply);
     input.value = "";
+    loading.textContent = ""
   }
 }
 
