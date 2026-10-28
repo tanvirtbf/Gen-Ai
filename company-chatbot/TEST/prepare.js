@@ -12,7 +12,7 @@ export async function indexTheDocument(filePath) {
     chunkSize: 500,
     chunkOverlap: 100,
   });
-  const texts = await (await splitter.splitText(doc[0].pageContent)).join("\n\n\n")
+  const texts = await (await splitter.splitText(doc[0].pageContent))
 
-  console.log(texts)
+  console.log(texts.length)
 }
