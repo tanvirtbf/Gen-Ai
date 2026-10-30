@@ -14,13 +14,10 @@ const pinecone = new PineconeClient();
 
 const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX_NAME);
 
-const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
+export const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
   pineconeIndex,
   maxConcurrency: 5,
 });
-
-// const testEmbed = await embeddings.embedQuery("hello");
-// console.log("Embedding works, length:", testEmbed.length);
 
 export async function indexTheDocument(filePath) {
   const loader = new PDFLoader(filePath, { splitPages: false }); // splitPages false kora hoise karon by default PDFLoader pdf er prottekta page ke ekta alada object er vitor pagecontent e rakhe . kintu eta false korle full pdf er sob content ektaii object e rakha hobe .
