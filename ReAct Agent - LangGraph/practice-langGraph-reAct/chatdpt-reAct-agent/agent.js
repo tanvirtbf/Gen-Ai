@@ -22,6 +22,17 @@ async function main() {
         tools: [search]
     })
 
+    // Agent Invoked
+    const result = await agent.invoke({
+        messages: [
+            {
+                role: 'user',
+                content: 'What is the current weather in dhaka?'
+            }
+        ]
+    })
+
+
 }
 
 await main();
