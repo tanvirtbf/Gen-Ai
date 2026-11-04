@@ -1,6 +1,8 @@
-import { ChatGroq } from '@langchain/groq'
+import { ChatGroq } from "@langchain/groq";
 
-const llm = new ChatGroq({
-    model: 'llama-3.3-70b-versatile',
+async function main() {
+  const llm = new ChatGroq({
+    model: "openai/gpt-oss-120b",
     temperature: 0,
-})
+  });
+}
