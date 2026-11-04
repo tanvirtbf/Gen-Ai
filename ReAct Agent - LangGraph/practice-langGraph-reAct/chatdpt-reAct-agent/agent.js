@@ -1,5 +1,6 @@
 import { ChatGroq } from '@langchain/groq'
 import { TavilySearch } from '@langchain/tavily'
+import { createReactAgent } from '@langchain/langgraph/prebuilt'
 
 async function main() {
 
@@ -10,9 +11,15 @@ async function main() {
     })
 
     // Tool Setup 
-    const tool = new TavilySearch({
+    const search = new TavilySearch({
         maxResults: 5,
         topic: 'general'
+    })
+
+    // ReAct Agent Setup
+    const agent = createReactAgent({
+        llm: model,
+        tools: [search]
     })
 
 }
