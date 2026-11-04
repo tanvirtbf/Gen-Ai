@@ -20,4 +20,8 @@ async function main() {
         },
     ],
   })
+
+  console.log("Result: ", result.messages[result.messages.length-1].content)
 }
+
+main();
