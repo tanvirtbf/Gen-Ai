@@ -9,7 +9,7 @@ async function main() {
   });
 
   const search = new TavilySearch({
-    maxResult: 5,
+    maxResults: 5,
     topic: "general",
   });
 
