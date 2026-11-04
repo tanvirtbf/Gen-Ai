@@ -1,5 +1,6 @@
 import { ChatGroq } from "@langchain/groq";
-import { createReactAgent } from '@langchain/langgraph/prebuilt'
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { TavilySearch } from "@langchain/tavily";
 
 async function main() {
   const model = new ChatGroq({
@@ -7,21 +8,26 @@ async function main() {
     temperature: 0,
   });
 
+  const search = new TavilySearch({
+    maxResult: 5,
+    topic: "general",
+  });
+
   const agent = createReactAgent({
     llm: model,
-    tools: []
-  })
+    tools: [search],
+  });
 
   const result = await agent.invoke({
     messages: [
-        {
-            role: 'user',
-            content: 'Hi, My name is Tanvir'
-        },
+      {
+        role: "user",
+        content: "what is the current weather in dhaka?",
+      },
     ],
-  })
+  });
 
-  console.log("Result: ", result.messages[result.messages.length-1].content)
+  console.log("Result: ", result.messages[result.messages.length - 1].content);
 }
 
-main();
+await main();
