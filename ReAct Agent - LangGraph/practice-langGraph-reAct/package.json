@@ -1,22 +1,21 @@
 {
-  "name": "chatdpt-react-agent",
-  "version": "1.0.0",
-  "description": "",
+  "name": ".",
+  "module": "index.js",
   "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "dev": "node --env-file=.env app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "@types/bun": "latest"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
   "dependencies": {
-    "@langchain/core": "^1.1.36",
-    "@langchain/groq": "^1.1.5",
-    "@langchain/langgraph": "^1.2.5",
-    "@langchain/tavily": "^1.2.0",
-    "langchain": "^1.2.37",
-    "zod": "^4.3.6"
+    "@langchain/community": "^0.3.49",
+    "@langchain/core": "^0.3.66",
+    "@langchain/openai": "^0.6.2",
+    "@langchain/pinecone": "^0.2.0",
+    "@langchain/textsplitters": "^0.1.0",
+    "@pinecone-database/pinecone": "^6.1.2",
+    "groq-sdk": "^0.29.0",
+    "pdf-parse": "^1.1.1"
   }
 }
