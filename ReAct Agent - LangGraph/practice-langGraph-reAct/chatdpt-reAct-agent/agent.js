@@ -1,4 +1,5 @@
 import { ChatGroq } from '@langchain/groq'
+import { TavilySearch } from '@langchain/tavily'
 
 async function main() {
 
@@ -6,6 +7,12 @@ async function main() {
     const model = new ChatGroq({
         model: 'openai/gpt-oss-120b',
         temperature: 0,
+    })
+
+    // Tool Setup 
+    const tool = new TavilySearch({
+        maxResults: 5,
+        topic: 'general'
     })
 
 }
