@@ -1,5 +1,16 @@
+import { ChatGroq } from '@langchain/groq'
 
+async function main() {
 
+    // LLM setup
+    const model = new ChatGroq({
+        model: 'openai/gpt-oss-120b',
+        temperature: 0,
+    })
+
+}
+
+await main();
 
 
 
