@@ -15,7 +15,10 @@ const llm = new ChatGroq({
 });
 
 // 2. Build the graph
-function callModel(state) {
+async function callModel(state) {
+  console.log("Calling LLM...");
+  const response = await llm.invoke(state.messages);
+  console.log("Response in Call Model: ", response);
   return state;
 }
 
