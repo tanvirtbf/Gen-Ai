@@ -19,7 +19,7 @@ async function callModel(state) {
   console.log("Calling LLM...");
   const response = await llm.invoke(state.messages);
   console.log("Response in Call Model: ", response);
-  return state;
+  return { messages: [response] };
 }
 
 const graph = new StateGraph(MessagesAnnotation);
