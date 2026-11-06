@@ -22,7 +22,7 @@ async function main() {
       // Google calender logic goes...
 
       return JSON.stringify([
-        { title: "Meeting with sujoy", time: "2 PM", location: "Gmeet" },
+        { title: "Meeting with sujoy", date:'6 November 2026', time: "2 PM", location: "Gmeet" },
       ]);
     },
     {
@@ -37,7 +37,8 @@ async function main() {
   // ReAct Agent Setup
   const agent = createReactAgent({
     llm: model,
-    tools: [search],
+    tools: [search, calenderEvents],
+    // temperature: 2,
   });
 
   // Agent Invoked
@@ -49,7 +50,7 @@ async function main() {
       },
       {
         role: "user",
-        content: "What is the current weather in dhaka?",
+        content: "Do i have any meeting for tomorrow?",
       },
     ],
   });
