@@ -47,7 +47,7 @@ const llm = new ChatGroq({
 async function callModel(state) {
   console.log("Calling LLM...");
   const response = await llm.invoke(state.messages);
-//   console.log("Response in Call Model: ", response);
+  //   console.log("Response in Call Model: ", response);
   return { messages: [response] };
 }
 
@@ -64,7 +64,7 @@ function shouldContinue(state) {
     return "__end__";
   }
 
-  return "__end__"
+  return "__end__";
 }
 
 const graph = new StateGraph(MessagesAnnotation)
@@ -86,11 +86,11 @@ async function main() {
     ],
   });
 
-//   console.log(result);
+  //   console.log(result);
 
-  const messages = result.messages
-  const final = messages[messages.length - 1]
-  console.log("Final Result : ", final.content)
+  const messages = result.messages;
+  const final = messages[messages.length - 1];
+  console.log("Final Result : ", final.content);
 }
 
 await main();
