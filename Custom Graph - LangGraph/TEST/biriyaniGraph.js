@@ -1,57 +1,55 @@
+import { StateGraph, MessagesAnnotation } from "@langchain/langgraph";
 
+/**
+ * Cut The Vegetables
+ */
 
+function cutTheVegetables(state) {
+  return state;
+}
 
+/**
+ * Boil The Rice
+ */
+function boilTheRice(state) {
+  return state;
+}
 
+/**
+ * Add The Salt
+ */
+function addTheSalt(state) {
+  return state;
+}
 
+/**
+ * Taste The Biriyani
+ */
+function tasteTheBiriyani(state) {
+  return state;
+}
 
+/**
+ * Where to go
+ */
+function whereToGo() {
+  if (true) {
+    return "__end__";
+  } else {
+    return "addTheSalt";
+  }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const graph = new StateGraph(MessagesAnnotation)
+  .addNode("cutTheVegetables", cutTheVegetables)
+  .addNode("boilTheRice", boilTheRice)
+  .addNode("addTheSalt", addTheSalt)
+  .addNode("tasteTheBiriyani", tasteTheBiriyani)
+  .addEdge("__start__", "cutTheVegetables")
+  .addEdge("cutTheVegetables", "boilTheRice")
+  .addEdge("boilTheRice", "addTheSalt")
+  .addEdge("addTheSalt", "tasteTheBiriyani")
+  .addConditionalEdges("tasteTheBiriyani", whereToGo);
 
 // import { END, MessagesAnnotation, StateGraph } from "@langchain/langgraph";
 // import { writeFileSync } from "node:fs";
