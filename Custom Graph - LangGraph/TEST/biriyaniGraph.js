@@ -1,10 +1,13 @@
-import { StateGraph, MessagesAnnotation } from "@langchain/langgraph";
+import { StateGraph, MessagesAnnotation, END } from "@langchain/langgraph";
+import { writeFileSync } from "node:fs";
 
 /**
  * Cut The Vegetables
  */
+let x = 0;
 
 function cutTheVegetables(state) {
+  console.log("Cut The Vegetables");
   return state;
 }
 
@@ -12,6 +15,7 @@ function cutTheVegetables(state) {
  * Boil The Rice
  */
 function boilTheRice(state) {
+  console.log("Boil The Rice");
   return state;
 }
 
@@ -19,6 +23,7 @@ function boilTheRice(state) {
  * Add The Salt
  */
 function addTheSalt(state) {
+  console.log("Add The Salt");
   return state;
 }
 
@@ -26,6 +31,7 @@ function addTheSalt(state) {
  * Taste The Biriyani
  */
 function tasteTheBiriyani(state) {
+  console.log("Taste The Biriyani");
   return state;
 }
 
@@ -33,9 +39,10 @@ function tasteTheBiriyani(state) {
  * Where to go
  */
 function whereToGo() {
-  if (true) {
+  if (x == 1) {
     return "__end__";
   } else {
+    x++;
     return "addTheSalt";
   }
 }
@@ -49,7 +56,31 @@ const graph = new StateGraph(MessagesAnnotation)
   .addEdge("cutTheVegetables", "boilTheRice")
   .addEdge("boilTheRice", "addTheSalt")
   .addEdge("addTheSalt", "tasteTheBiriyani")
-  .addConditionalEdges("tasteTheBiriyani", whereToGo);
+  .addConditionalEdges("tasteTheBiriyani", whereToGo, {
+    __end__: END,
+    addTheSalt: "addTheSalt",
+  });
+
+const app = graph.compile();
+
+async function main() {
+  // Graph Visualization
+  const drawableGraphGraphState = await app.getGraphAsync();
+  const graphStateImage = await drawableGraphGraphState.drawMermaidPng();
+  const graphStateArrayBuffer = await graphStateImage.arrayBuffer();
+
+  const filePath = "./graphState.png";
+  writeFileSync(filePath, new Uint8Array(graphStateArrayBuffer));
+
+  // Invoke the Graph
+  const finalState = await app.invoke({
+    messages: [],
+  });
+
+  console.log("final: ", finalState);
+}
+
+main();
 
 // import { END, MessagesAnnotation, StateGraph } from "@langchain/langgraph";
 // import { writeFileSync } from "node:fs";
