@@ -1,48 +1,54 @@
-import { StateGraph, MessagesAnnotation, END } from "@langchain/langgraph";
+import { END, MessagesAnnotation, StateGraph } from "@langchain/langgraph";
 import { writeFileSync } from "node:fs";
 
 /**
- * Cut The Vegetables
+ * Cut the vegetables
  */
-let x = 0;
 
 function cutTheVegetables(state) {
-  console.log("Cut The Vegetables");
+  console.log("Cutting the vegetables....");
+
   return state;
 }
 
 /**
- * Boil The Rice
+ * Boil the Rice
  */
+
 function boilTheRice(state) {
-  console.log("Boil The Rice");
+  console.log("Boiling the Rice.....");
+
   return state;
 }
 
 /**
- * Add The Salt
+ * Add the salt
  */
+
 function addTheSalt(state) {
-  console.log("Add The Salt");
+  console.log("Adding the salt.....");
+
   return state;
 }
 
 /**
- * Taste The Biriyani
+ * Taste the biriyani
  */
+
 function tasteTheBiriyani(state) {
-  console.log("Taste The Biriyani");
+  console.log("Tasting the Biriyani.....");
+
   return state;
 }
 
 /**
- * Where to go
+ * Where to go?
  */
+
 function whereToGo() {
-  if (x == 1) {
+  if (true) {
     return "__end__";
   } else {
-    x++;
     return "addTheSalt";
   }
 }
@@ -61,11 +67,11 @@ const graph = new StateGraph(MessagesAnnotation)
     addTheSalt: "addTheSalt",
   });
 
-const app = graph.compile();
+const biriyaniProcess = graph.compile();
 
 async function main() {
   // Graph Visualization
-  const drawableGraphGraphState = await app.getGraphAsync();
+  const drawableGraphGraphState = await biriyaniProcess.getGraphAsync();
   const graphStateImage = await drawableGraphGraphState.drawMermaidPng();
   const graphStateArrayBuffer = await graphStateImage.arrayBuffer();
 
@@ -73,7 +79,7 @@ async function main() {
   writeFileSync(filePath, new Uint8Array(graphStateArrayBuffer));
 
   // Invoke the Graph
-  const finalState = await app.invoke({
+  const finalState = await biriyaniProcess.invoke({
     messages: [],
   });
 
@@ -81,93 +87,3 @@ async function main() {
 }
 
 main();
-
-// import { END, MessagesAnnotation, StateGraph } from "@langchain/langgraph";
-// import { writeFileSync } from "node:fs";
-
-// /**
-//  * Cut the vegetables
-//  */
-
-// function cutTheVegetables(state) {
-//   console.log("Cutting the vegetables....");
-
-//   return state;
-// }
-
-// /**
-//  * Boil the Rice
-//  */
-
-// function boilTheRice(state) {
-//   console.log("Boiling the Rice.....");
-
-//   return state;
-// }
-
-// /**
-//  * Add the salt
-//  */
-
-// function addTheSalt(state) {
-//   console.log("Adding the salt.....");
-
-//   return state;
-// }
-
-// /**
-//  * Taste the biriyani
-//  */
-
-// function tasteTheBiriyani(state) {
-//   console.log("Tasting the Biriyani.....");
-
-//   return state;
-// }
-
-// /**
-//  * Where to go?
-//  */
-
-// function whereToGo() {
-//   if (true) {
-//     return "__end__";
-//   } else {
-//     return "addTheSalt";
-//   }
-// }
-
-// const graph = new StateGraph(MessagesAnnotation)
-//   .addNode("cutTheVegetables", cutTheVegetables)
-//   .addNode("boilTheRice", boilTheRice)
-//   .addNode("addTheSalt", addTheSalt)
-//   .addNode("tasteTheBiriyani", tasteTheBiriyani)
-//   .addEdge("__start__", "cutTheVegetables")
-//   .addEdge("cutTheVegetables", "boilTheRice")
-//   .addEdge("boilTheRice", "addTheSalt")
-//   .addEdge("addTheSalt", "tasteTheBiriyani")
-//   .addConditionalEdges("tasteTheBiriyani", whereToGo, {
-//     __end__: END,
-//     addTheSalt: "addTheSalt",
-//   });
-
-// const biriyaniProcess = graph.compile();
-
-// async function main() {
-//   // Graph Visualization
-//   const drawableGraphGraphState = await biriyaniProcess.getGraphAsync();
-//   const graphStateImage = await drawableGraphGraphState.drawMermaidPng();
-//   const graphStateArrayBuffer = await graphStateImage.arrayBuffer();
-
-//   const filePath = "./graphState.png";
-//   writeFileSync(filePath, new Uint8Array(graphStateArrayBuffer));
-
-//   // Invoke the Graph
-//   const finalState = await biriyaniProcess.invoke({
-//     messages: [],
-//   });
-
-//   console.log("final: ", finalState);
-// }
-
-// main();
