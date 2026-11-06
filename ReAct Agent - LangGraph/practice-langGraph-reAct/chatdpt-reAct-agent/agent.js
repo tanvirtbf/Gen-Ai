@@ -44,6 +44,10 @@ async function main() {
   const result = await agent.invoke({
     messages: [
       {
+        role: "system",
+        content: `You are a personal assistant. Use provided tools to get the information if you don't have it. Current Date and time : ${new Date().toUTCString()}`,
+      },
+      {
         role: "user",
         content: "What is the current weather in dhaka?",
       },
@@ -54,4 +58,3 @@ async function main() {
 }
 
 await main();
-
