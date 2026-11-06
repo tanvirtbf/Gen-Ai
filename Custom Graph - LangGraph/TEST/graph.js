@@ -10,6 +10,7 @@ import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
 import { TavilySearch } from "@langchain/tavily";
 import { tool } from "@langchain/core/tools";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
+import { ja } from "zod/locales";
 
 // Tools
 const search = new TavilySearch({
@@ -50,4 +51,31 @@ async function callModel(state) {
   return { messages: [response] };
 }
 
-const graph = new StateGraph(MessagesAnnotation);
+// Conditional Edge
+function shouldContinue(state) {
+  console.log(state.messages);
+
+  return "__end__";
+}
+
+const graph = new StateGraph(MessagesAnnotation)
+  .addNode("llm", callModel)
+  .addNode("tools", toolNode)
+  .addEdge("__start__", "llm")
+  .addEdge("tools", "llm")
+  .addConditionalEdges("llm", shouldContinue);
+
+const app = graph.compile();
+
+async function main() {
+  await app.invoke({
+    messages: [
+      {
+        role: "user",
+        content: "What is the current wheather in dhaka?",
+      },
+    ],
+  });
+}
+
+await main();
