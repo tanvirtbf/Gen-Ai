@@ -10,7 +10,7 @@ import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
 import { TavilySearch } from "@langchain/tavily";
 import { tool } from "@langchain/core/tools";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { ja } from "zod/locales";
+import z from "zod";
 
 // Tools
 const search = new TavilySearch({
@@ -47,15 +47,24 @@ const llm = new ChatGroq({
 async function callModel(state) {
   console.log("Calling LLM...");
   const response = await llm.invoke(state.messages);
-  console.log("Response in Call Model: ", response);
+//   console.log("Response in Call Model: ", response);
   return { messages: [response] };
 }
 
 // Conditional Edge
 function shouldContinue(state) {
-  console.log(state.messages);
+  console.log(
+    "State Message : ",
+    state.messages[state.messages.length - 1].tool_calls,
+  );
 
-  return "__end__";
+  if (state.messages[state.messages.length - 1].tool_calls?.length) {
+    return "tools";
+  } else {
+    return "__end__";
+  }
+
+  return "__end__"
 }
 
 const graph = new StateGraph(MessagesAnnotation)
@@ -68,7 +77,7 @@ const graph = new StateGraph(MessagesAnnotation)
 const app = graph.compile();
 
 async function main() {
-  await app.invoke({
+  const result = await app.invoke({
     messages: [
       {
         role: "user",
@@ -76,6 +85,12 @@ async function main() {
       },
     ],
   });
+
+//   console.log(result);
+
+  const messages = result.messages
+  const final = messages[messages.length - 1]
+  console.log("Final Result : ", final.content)
 }
 
 await main();
