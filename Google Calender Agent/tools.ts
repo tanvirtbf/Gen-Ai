@@ -2,7 +2,7 @@ import { tool } from "@langchain/core/tools";
 import { google } from "googleapis";
 import * as z from "zod";
 
-const calendar = google.calendar({version: 'v3', })
+// const calendar = google.calendar({version: 'v3', })
 
 export const createEventTool = tool(
   async () => {

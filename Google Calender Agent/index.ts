@@ -1,6 +1,5 @@
 import { ChatGroq } from "@langchain/groq";
-import { tool } from "@langchain/core/tools";
-import { createEventTool, getEventsTool } from "./tools";
+import { createEventTool, getEventsTool } from "./tools.ts";
 import { END, MessagesAnnotation, StateGraph } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import type { AIMessage } from "langchain";
