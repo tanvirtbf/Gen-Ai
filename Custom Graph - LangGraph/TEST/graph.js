@@ -7,10 +7,17 @@
 
 import { tool } from "@langchain/core/tools";
 import { ChatGroq } from "@langchain/groq";
-import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
+import {
+  MemorySaver,
+  MessagesAnnotation,
+  StateGraph,
+} from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { TavilySearch } from "@langchain/tavily";
 import z from "zod";
+
+// Memory
+const checkPointer = new MemorySaver();
 
 // Tools setup
 const search = new TavilySearch({
@@ -42,7 +49,7 @@ const toolNode = new ToolNode(tools);
 const llm = new ChatGroq({
   model: "openai/gpt-oss-120b",
   temperature: 0,
-}).bindTools(tools)
+}).bindTools(tools);
 
 // build the graph
 async function llmNode(state) {
@@ -58,7 +65,6 @@ function whereToGo(state) {
   } else {
     return "__end__";
   }
-
 }
 
 const graph = new StateGraph(MessagesAnnotation)
@@ -68,19 +74,27 @@ const graph = new StateGraph(MessagesAnnotation)
   .addEdge("tools", "llm")
   .addConditionalEdges("llm", whereToGo);
 
-const app = graph.compile();
+const app = graph.compile({ checkpointer: checkPointer });
 
 async function main() {
-  const result = await app.invoke({
-    messages: [
-      {
-        role: 'user', 
-        content: "What is the current weather in dhaka?"
-      }
-    ]
-  })
+  let config = { configurable: { thread_id: "1" } };
 
-  console.log("Final Result : ",result.messages[result.messages.length-1].content)
+  const result = await app.invoke(
+    {
+      messages: [
+        {
+          role: "user",
+          content: "What is the current weather in dhaka?",
+        },
+      ],
+    },
+    config,
+  );
+
+  console.log(
+    "Final Result : ",
+    result.messages[result.messages.length - 1].content,
+  );
 }
 
 await main();
