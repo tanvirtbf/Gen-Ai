@@ -5,49 +5,85 @@
  * 4. Add the memory
  */
 
+import { tool } from "@langchain/core/tools";
+import { ChatGroq } from "@langchain/groq";
+import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
+import { ToolNode } from "@langchain/langgraph/prebuilt";
+import { TavilySearch } from "@langchain/tavily";
+import z from "zod";
 
+// Tools setup
+const search = new TavilySearch({
+  maxResults: 5,
+  topic: "general",
+});
 
+const calenderEvents = tool(
+  async ({ query }) => {
+    // Google calender logic goes here..
+    return JSON.stringify([
+      { title: "Meeting with Tanvir", time: "2PM", location: "Dhaka" },
+    ]);
+  },
+  {
+    name: "get-calender-events",
+    description: "Call to get the calender events",
+    schema: z.object({
+      query: z.string().describe("The query to use in calender event search"),
+    }),
+  },
+);
 
+const tools = [search, calenderEvents];
+const toolNode = new ToolNode(tools);
 
+// llm setup
 
+const llm = new ChatGroq({
+  model: "openai/gpt-oss-120b",
+  temperature: 0,
+}).bindTools(tools)
 
+// build the graph
+async function llmNode(state) {
+  const response = await llm.invoke(state.messages);
+  return { messages: [response] };
+}
 
+function whereToGo(state) {
+  const lastMessage = state.messages[state.messages.length - 1];
 
+  if (state.messages[state.messages.length - 1].tool_calls?.length) {
+    return "tools";
+  } else {
+    return "__end__";
+  }
 
+}
 
+const graph = new StateGraph(MessagesAnnotation)
+  .addNode("llm", llmNode)
+  .addNode("tools", toolNode)
+  .addEdge("__start__", "llm")
+  .addEdge("tools", "llm")
+  .addConditionalEdges("llm", whereToGo);
 
+const app = graph.compile();
 
+async function main() {
+  const result = await app.invoke({
+    messages: [
+      {
+        role: 'user', 
+        content: "What is the current weather in dhaka?"
+      }
+    ]
+  })
 
+  console.log("Final Result : ",result.messages[result.messages.length-1].content)
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+await main();
 
 // import { ChatGroq } from "@langchain/groq";
 // import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
